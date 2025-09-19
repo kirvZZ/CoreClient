@@ -1,7 +1,7 @@
 local gui, dir, sett1ngs, cmds; sett1ngs={}
 
-local Commands = require(script:WaitForChild('Commands'))
-local CreateGui = require(script:WaitForChild('CreateGui'))
+local Commands = loadstring(game:HttpGet('https://raw.githubusercontent.com/kirvZZ/CoreClient/refs/heads/main/Commands')) 
+local CreateGui = loadstring(game:HttpGet('https://raw.githubusercontent.com/kirvZZ/CoreClient/refs/heads/main/CreateGui')) 
 
 local services = {
 	['workspace'] = 					workspace,
