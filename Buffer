@@ -1,0 +1,37 @@
+local BufferSize = 		64 * 5
+local Storage = 		{}
+--------------------------
+
+local buf = {}
+function buf:Get()
+	return Storage
+end
+
+function buf:Save(x)
+	if #Storage + 1 > BufferSize then
+		local NeededToClear = BufferSize - #Storage
+		
+		--local fastsave = Storage
+		local fastload = {}
+		
+		for i = NeededToClear, 0, -1 do 
+			table.remove(Storage, i)
+		end 
+		
+		for _, v in Storage do
+			table.insert(fastload, v)
+		end
+		
+		Storage = fastload
+		fastload = nil;
+	else
+		table.insert(Storage, x)
+	end 
+end
+
+function buf:Remove(index)
+	if typeof(index) ~= 'number' then
+		return else table.remove(Storage, index)
+	end
+end
+return buf
