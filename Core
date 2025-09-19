@@ -1,0 +1,74 @@
+local gui, dir, sett1ngs, cmds; sett1ngs={}
+
+local Commands = require(script:WaitForChild('Commands'))
+local CreateGui = require(script:WaitForChild('CreateGui'))
+
+local services = {
+	['workspace'] = 					workspace,
+	['ReplicatedStorage'] = 			game:GetService('ReplicatedStorage'),
+	['ReplicatedFirst'] = 				game:GetService('ReplicatedFirst'),
+	['Debris'] = 						game:GetService('Debris'),
+	['Lighting'] = 						game:GetService('Lighting'),
+	['StarterGui'] = 					game:GetService('StarterGui'),
+	['StarterPack'] = 					game:GetService('StarterPack'),
+	['StarterPlayer'] = 				game:GetService('StarterPlayer'),
+	['Players'] = 						game:GetService('Players'),
+	['TeleportService'] = 				game:GetService('TeleportService'),
+	['TweenService'] = 					game:GetService('TweenService'),
+	['MaterialService'] = 				game:GetService('MaterialService'),
+	['UserInputService'] = 				game:GetService('UserInputService'),
+	['SoundService'] = 					game:GetService('SoundService'),
+	['TextChatService'] = 				game:GetService('TextChatService'),
+	['VoiceChatService'] = 				game:GetService('VoiceChatService'),
+	['GuiService'] = 					game:GetService('GuiService'),
+	['RunService'] =					game:GetService('RunService'),
+}; services.LocalPlayer = services.Players.LocalPlayer; services.GetCamera = function() return services.workspace:WaitForChild('Camera') end; services.GetMouse = function() return services.LocalPlayer:GetMouse() end; services.GetKeyCode = function(x) if Enum.KeyCode[x] then return Enum.KeyCode[x] end end; 
+services.FromKeyCode = function(x) 
+	if x then
+		if Enum.KeyCode[x] then 
+			return string.sub(
+				tostring(Enum.KeyCode[x]), 
+				14, 
+				#tostring(Enum.KeyCode[x])) 
+		end 
+	end
+end; 
+services.UpdateSetting = function(z, x) if sett1ngs[z] then sett1ngs[z] = x end end; 
+services.GetSettings = function()
+	return sett1ngs
+end
+
+
+local Output
+Output = CreateGui.InstallOutput(services.LocalPlayer.PlayerGui, sett1ngs)
+services.output = Output
+
+
+gui, dir = CreateGui.Install(services.LocalPlayer.PlayerGui) 
+
+sett1ngs.binds = {
+	
+	ConsoleOpen = services.GetKeyCode('T'),
+	ConsoleClose = services.GetKeyCode('Escape'),
+};
+
+sett1ngs.size = 1
+
+cmds = Commands(services, dir, gui, sett1ngs)
+CreateGui.ScriptGui(gui, dir, services, cmds)
+
+local function DoConsoleFontFix(x)
+	if x then return end
+	
+	local ConsoleInput = CreateGui.Console
+	
+	
+	ConsoleInput:Open();
+	wait(.03);
+	ConsoleInput:Close();
+	ConsoleInput.InputDisabled = false;
+
+end
+
+DoConsoleFontFix()
+
