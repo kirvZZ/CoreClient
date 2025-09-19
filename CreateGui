@@ -1,0 +1,755 @@
+local module = {}
+
+local buf = require(script.Parent.Buffer)
+function module.Install(x)
+	local UI_Directory = {}
+	UI_Directory.Frames = {}
+	local temp_folder = Instance.new('Folder')
+
+	-------------------------------------------------------------------
+	UI_Directory.Frames.Screen = Instance.new('ScreenGui', temp_folder)
+	local screen = 								UI_Directory.Frames.Screen
+	screen.Enabled = 							false
+	screen.IgnoreGuiInset = 					true
+	screen.ResetOnSpawn = 						false
+	screen.DisplayOrder = 						9999999
+	screen.Archivable =							true -- will'be disabled.
+
+	--------------------------------------------------------------------------------
+	UI_Directory.Frames.BarFrame = Instance.new('Frame', UI_Directory.Frames.Screen)
+	local barframe = 							UI_Directory.Frames.BarFrame
+	barframe.BackgroundTransparency = 			0.45
+	barframe.BackgroundColor3 = 				Color3.fromRGB(0, 0, 0)
+	barframe.BorderSizePixel = 					0
+	barframe.Interactable = 					true
+	barframe.AnchorPoint = 						Vector2.new(0, 1)
+	barframe.Position = 						UDim2.new(0, 0, 1, 0)
+	barframe.Size = 							UDim2.new(1, 0, 0, 17)
+
+	-------------------------------------------------------------------------------------
+	UI_Directory.Frames.Padder1 = Instance.new('UIPadding', UI_Directory.Frames.BarFrame)
+	local pad1 =								UI_Directory.Frames.Padder1
+	pad1.PaddingBottom =						UDim.new(0, 1)
+	pad1.PaddingLeft =							UDim.new(0, 3)
+	pad1.PaddingRight =							UDim.new(0, 3)
+	pad1.PaddingTop =							UDim.new(0, 0)
+
+	---------------------------------------------------------------------------------
+	UI_Directory.Frames.Input = Instance.new('TextBox', UI_Directory.Frames.BarFrame)
+	local input =								UI_Directory.Frames.Input
+	input.AnchorPoint =							Vector2.new(0.5, 0.5)
+	input.BackgroundTransparency = 				1
+	input.BorderSizePixel = 					0
+	input.ClearTextOnFocus =					false
+	input.CursorPosition =						-1
+	input.Interactable =						true
+	input.LayoutOrder =							9999999
+	input.MultiLine =							false
+	input.ShowNativeInput = 					false
+	input.TextEditable =						true
+	input.SelectionStart =						-1
+	input.PlaceholderText =						''
+	input.Text =								''
+	input.TextColor3 =							Color3.fromRGB(255, 255, 255)
+	input.TextScaled =							true
+	input.TextStrokeTransparency =				1
+	input.TextTransparency =					0
+	input.TextWrapped =							true
+	input.TextTruncate =						Enum.TextTruncate.AtEnd
+	input.TextXAlignment =						Enum.TextXAlignment.Left
+	input.TextYAlignment =						Enum.TextYAlignment.Center
+	input.Font =								Enum.Font.Code
+	input.TextSize =							14
+	input.Size = 								UDim2.new(1, 0, 1, 0)
+	input.Position = 							UDim2.new(0.5, 0, 0.5, 0)
+
+	--------------------------------------------------------------------------------
+	UI_Directory.Frames.Offers = Instance.new('Frame', UI_Directory.Frames.BarFrame)
+	local offers =								UI_Directory.Frames.Offers
+	offers.Size =								UDim2.new(0, 5, 0, 5)
+	offers.BackgroundTransparency = 			1
+	offers.AnchorPoint =						Vector2.new(0, 1)
+	offers.Position =							UDim2.new(0, 0, 0, -3)
+
+	------------------------------------------------------------------------------------------
+	UI_Directory.Frames.ListLayout1 = Instance.new('UIListLayout', UI_Directory.Frames.Offers)
+	local listl =								UI_Directory.Frames.ListLayout1
+	listl.FillDirection =						Enum.FillDirection.Vertical
+	listl.HorizontalAlignment = 				Enum.HorizontalAlignment.Left
+	listl.VerticalAlignment =					Enum.VerticalAlignment.Bottom
+	listl.Padding = UDim.new(0, 1)
+	
+	
+	UI_Directory.Frames.Scale1 = Instance.new('UIScale', UI_Directory.Frames.Screen)
+	local scale1 = 								UI_Directory.Frames.Scale1
+	scale1.Scale =								1
+	scale1.Name =								'rescale_ui'
+	
+	screen:AddTag('isPrefab_')
+	screen.Parent = x;
+	return screen, UI_Directory.Frames
+end
+
+function module.InstallOutput(x, sett1ngs)
+	local OutputCommands = {}
+	local OutputFrames = {}
+	
+	OutputFrames.Screen = Instance.new('ScreenGui')
+	OutputFrames.Screen.Enabled = false
+	OutputFrames.Screen.IgnoreGuiInset = true
+	OutputFrames.Screen.ResetOnSpawn = false
+	OutputFrames.Screen.DisplayOrder = math.huge
+	
+	OutputFrames.Frame1 = Instance.new('Frame', OutputFrames.Screen)
+	OutputFrames.Frame1.BackgroundTransparency = 0
+	OutputFrames.Frame1.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	OutputFrames.Frame1.Position = UDim2.new(0.5, 0, 0.5, 0)
+	OutputFrames.Frame1.Size = UDim2.new(0, 758, 0, 459)
+	OutputFrames.Frame1.AnchorPoint = Vector2.new(0.5, 0.5)
+	
+	OutputFrames.Storage = Instance.new('ScrollingFrame', OutputFrames.Frame1)
+	OutputFrames.Storage.AnchorPoint = Vector2.new(0.5, 0.5)
+	OutputFrames.Storage.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	OutputFrames.Storage.BackgroundTransparency = 0.85
+	OutputFrames.Storage.Position = UDim2.new(0.5, 0, 0.535, 0)
+	OutputFrames.Storage.Size = UDim2.new(1, 0, 0.93)
+	OutputFrames.Storage.ScrollBarThickness = 0
+	OutputFrames.Storage.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	
+	OutputFrames.Close = Instance.new('TextButton', OutputFrames.Frame1)
+	OutputFrames.Close.AnchorPoint = Vector2.new(1, 0)
+	OutputFrames.Close.BackgroundTransparency = 1
+	OutputFrames.Close.Position = UDim2.new(1, 0, 0, 0)
+	OutputFrames.Close.Size = UDim2.new(0, 31, 0, 31)
+	OutputFrames.Close.Font = Enum.Font.Nunito
+	OutputFrames.Close.Text = '<b>X</b>'
+	OutputFrames.Close.TextColor3 = Color3.fromRGB(255, 110, 110)
+	OutputFrames.Close.RichText = true
+	OutputFrames.Close.TextScaled = true
+	
+	OutputFrames.Desc = Instance.new('TextLabel', OutputFrames.Frame1)
+	OutputFrames.Desc.AutomaticSize = Enum.AutomaticSize.XY
+	OutputFrames.Desc.BackgroundTransparency = 1
+	OutputFrames.Desc.Size = UDim2.new(0, 0, 0, 31)
+	OutputFrames.Desc.Font = Enum.Font.Montserrat
+	OutputFrames.Desc.Text = '<b>Output</b>'
+	OutputFrames.Desc.RichText = true
+	OutputFrames.Desc.TextSize = 22
+	OutputFrames.Desc.TextColor3 = Color3.fromRGB(255, 255, 255)
+	-->
+	
+	OutputFrames.Corner1 = Instance.new('UICorner', OutputFrames.Frame1)
+	OutputFrames.Corner1.CornerRadius = UDim.new(0, 5)
+	
+	OutputFrames.Padding1 = Instance.new('UIPadding', OutputFrames.Frame1)
+	OutputFrames.Padding1.PaddingBottom = UDim.new(0, 3)
+	OutputFrames.Padding1.PaddingTop = UDim.new(0, 3)
+	OutputFrames.Padding1.PaddingLeft = UDim.new(0, 7)
+	OutputFrames.Padding1.PaddingRight = UDim.new(0, 7)
+	
+	OutputFrames.Stroke1 = Instance.new('UIStroke', OutputFrames.Frame1)
+	OutputFrames.Stroke1.Color = Color3.fromRGB(255, 255, 255)
+	OutputFrames.Stroke1.Transparency = 0
+	
+	--OutputFrames.Stroke2 = Instance.new('UIStroke', OutputFrames.Desc)
+	--OutputFrames.Stroke2.Color = Color3.fromRGB(255, 255, 255)
+	--OutputFrames.Stroke2.Transparency = 0.55
+	
+	OutputFrames.ListOrder1 = Instance.new('UIListLayout', OutputFrames.Storage)
+	OutputFrames.ListOrder1.SortOrder = Enum.SortOrder.LayoutOrder
+	
+	OutputFrames.Padding2 = Instance.new('UIPadding', OutputFrames.Storage)
+	OutputFrames.Padding2.PaddingBottom = UDim.new(0, 3)
+	OutputFrames.Padding2.PaddingTop = UDim.new(0, 3)
+	OutputFrames.Padding2.PaddingLeft = UDim.new(0, 3)
+	OutputFrames.Padding2.PaddingRight = UDim.new(0, 3)
+	
+	OutputFrames.Stroke3 = Instance.new('UIStroke', OutputFrames.Storage)
+	OutputFrames.Stroke3.Color = Color3.fromRGB(172, 172, 172)
+	OutputFrames.Stroke3.Transparency = 0.75
+	
+	OutputFrames.Scale1 = Instance.new('UIScale', OutputFrames.Screen)
+	OutputFrames.Scale1.Scale = 1
+	-->
+	
+	OutputFrames.Close.MouseButton1Click:Connect(function(any: any)
+		OutputFrames.Screen.Enabled = false
+	end)
+	OutputFrames.Frame1.Active =true;
+	OutputFrames.Frame1.Draggable =true;
+	
+	
+	-->
+	local logs = {}
+	
+	local function log(x, color, UserPrinted)
+		local new = Instance.new('TextBox', OutputFrames.Storage)
+		new.BackgroundTransparency = 1
+		new.AutomaticSize = Enum.AutomaticSize.XY
+		new.Size = UDim2.new(0, 0, 0, 0)
+		new.Font = Enum.Font.SourceSans
+		new.RichText = true
+		new.TextColor3 = Color3.fromRGB(206, 206, 206)
+		new.TextSize = 13
+		new.TextWrapped = true
+		new.TextXAlignment = Enum.TextXAlignment.Left
+		new.LayoutOrder = #logs
+		
+		new.TextEditable = false
+		new.ClearTextOnFocus = false
+		
+		local EdurableText = x
+		local EditText = '<b>' .. x .. '</b>'
+		
+		if UserPrinted then
+			EditText = EditText .. '<font size="11"><font transparency="0.55"> -- printed by user.</font></font>' 
+		end
+		
+		new.Text = EditText	
+		
+		new.Changed:Connect(function(Property)
+			if Property == 'SelectionStart' or Property == 'CursorPosition' then
+				if new.SelectionStart ~= -1 or new.CursorPosition ~= -1 then
+					new.Text = EdurableText
+				else
+					new.Text = EditText
+				end
+			end
+		end)
+		
+		if color then
+			new.TextColor3 = color
+		end
+
+		new.Name = '{' .. math.random(1000, 9999) .. '-' .. math.random(1000, 9999) .. '}' 
+		new.Parent = OutputFrames.Storage
+		
+		table.insert(logs, new)
+	end
+	
+	local clearF = function()
+		for _, v in logs do
+			v:Destroy();
+		end
+		
+		logs = {};
+	end
+	
+	OutputCommands.clear = function(...)
+		clearF()
+	end
+	
+	OutputCommands.print = function(x, userPrinted)
+		log(x, nil, userPrinted)
+	end
+	
+	OutputCommands.error = function(x, userPrinted)
+		log(x, Color3.fromRGB(206, 60, 60), userPrinted)
+	end
+	
+	OutputCommands.warn = function(x, userPrinted)
+		log(x, Color3.fromRGB(206, 169, 57), userPrinted)
+	end
+	
+	OutputCommands.inform = function(x, userPrinted)
+		log(x, Color3.fromRGB(102, 176, 255), userPrinted)
+	end
+	
+	OutputCommands.getlogs = function()
+		return logs
+	end
+	
+	local Assets = {ui = OutputFrames, cmds = OutputCommands}
+	
+	
+	OutputFrames.Screen.Parent = x
+	return Assets
+end
+
+function module.ScriptGui(gui: ScreenGui, dir, serv, cmds)
+	if not gui:HasTag('isPrefab_') then
+		return 
+	else 
+		gui:RemoveTag('isPrefab_'); gui:HasTag('isClaimed_');
+		
+		local cons = {};
+		local upvs = {};
+		local fncs = {};
+		
+		upvs.InputFocused_01 = false;
+		upvs.InputContext_01 = dir.Input.Text;
+				
+		task.spawn(function() --Start [Offers]
+			local Offers = {}
+			
+			Offers.CurrentOffers = {}
+			Offers.CurrentSelect = -1
+			Offers.LastSelect = Offers.CurrentSelect
+			
+			Offers.TempSave = ''
+			
+			Offers.Clear = function()
+				for i, v in pairs(dir.Offers:GetChildren()) do
+					if v:IsA("Frame") then
+						v:Destroy()
+					end
+				end
+				
+				Offers.CurrentOffersActive = false
+				Offers.CurrentOffers = {}
+				
+				delay(0.1, function()
+					Offers.TempSave = ''
+				end)
+			end
+			
+			Offers.UpdateSelection = function(moveDir, custom)
+				if moveDir == 1 then
+					if Offers.CurrentSelect == -1 then
+						Offers.LastSelect = Offers.CurrentSelect
+						
+						Offers.CurrentSelect = #Offers.CurrentOffers
+					elseif Offers.CurrentSelect > 1 then
+						Offers.LastSelect = Offers.CurrentSelect
+						Offers.CurrentSelect = Offers.CurrentSelect - 1
+					end
+					
+					if Offers.CurrentOffers[Offers.LastSelect] then
+						Offers.CurrentOffers[Offers.LastSelect].Inst.TextColor3 = Color3.fromRGB(211, 211, 211)
+					end
+					if Offers.CurrentOffers[Offers.CurrentSelect] then
+						Offers.CurrentOffers[Offers.CurrentSelect].Inst.TextColor3 = Color3.fromRGB(255, 238, 0)
+					end
+				elseif moveDir == 2 then
+					if Offers.CurrentSelect == -1 then
+						Offers.LastSelect = Offers.CurrentSelect
+						Offers.CurrentSelect = #Offers.CurrentOffers
+					elseif Offers.CurrentSelect < #Offers.CurrentOffers then
+						Offers.LastSelect = Offers.CurrentSelect
+						Offers.CurrentSelect = Offers.CurrentSelect + 1
+					end
+					
+					if Offers.CurrentOffers[Offers.LastSelect] then
+						Offers.CurrentOffers[Offers.LastSelect].Inst.TextColor3 = Color3.fromRGB(211, 211, 211)
+					end
+					if Offers.CurrentOffers[Offers.CurrentSelect] then
+						Offers.CurrentOffers[Offers.CurrentSelect].Inst.TextColor3 = Color3.fromRGB(255, 238, 0)
+						Offers.TempSave = Offers.CurrentOffers[Offers.CurrentSelect].Inst.Text
+					end
+
+				elseif moveDir == 3 then
+					if Offers.CurrentOffers[Offers.CurrentSelect].Callback then
+						Offers.CurrentOffers[Offers.CurrentSelect].Callback(true, true)
+					end
+				elseif moveDir == 4 then
+					
+					if Offers.CurrentOffers[Offers.LastSelect] then
+						Offers.CurrentOffers[Offers.LastSelect].Inst.TextColor3 = Color3.fromRGB(211, 211, 211)
+					end
+					if #Offers.CurrentOffers>0 then
+						Offers.CurrentOffers[#Offers.CurrentOffers].Inst.TextColor3 = Color3.fromRGB(255, 238, 0)
+						Offers.CurrentSelect = #Offers.CurrentOffers
+					end
+				elseif moveDir == 5 then
+					
+					Offers.LastSelect = Offers.CurrentSelect
+					Offers.CurrentOffers[Offers.LastSelect].Inst.TextColor3 = Color3.fromRGB(211, 211, 211)
+
+					Offers.CurrentOffers[custom.ownIndex1].Inst.TextColor3 = Color3.fromRGB(255, 238, 0)
+					Offers.CurrentSelect = custom.ownIndex1
+				end
+				
+				pcall(function()
+					Offers.TempSave = Offers.CurrentOffers[Offers.CurrentSelect].Inst.Text or ''
+				end)
+			end
+			
+			Offers.DoOffer = function(Text, Color, SplitIndex)
+				local Frame = Instance.new('Frame', dir.Offers)
+				Frame.BackgroundColor3 =					Color3.fromRGB(0, 0, 0)
+				Frame.BackgroundTransparency = 				0.5
+				Frame.Interactable =						true
+				Frame.Size =								UDim2.new(0, 200, 0, 16)
+				Frame.AnchorPoint =							Vector2.new(0, 1)
+
+				local Padder2 = Instance.new('UIPadding', Frame)
+				Padder2.PaddingBottom = 					UDim.new(0, 1)
+				Padder2.PaddingLeft =						UDim.new(0, 1)
+				Padder2.PaddingRight =						UDim.new(0, 1)
+				Padder2.PaddingTop =						UDim.new(0, 1)
+
+				local Button = Instance.new('TextButton', Frame)
+				Button.Text = Text
+				Button.TextScaled = true
+				Button.TextColor3 = Color or Color3.fromRGB(211, 211, 211) --255, 238, 0
+				Button.BackgroundTransparency = 1
+				Button.AutoButtonColor = false
+				Button.Interactable = true
+				Button.Size = UDim2.new(1, 0, 1, 0)
+				Button.ZIndex = 3
+				Button.Font = Enum.Font.Code
+				
+				Button.Name = Button.Text
+				Frame.Size = UDim2.new(0, Button.TextBounds.X + 5, 0, 16)
+				
+				local ButtonConnection_temp
+				local con_t 
+				local function Callback(x, byCast)
+					if con_t then
+						con_t:Disconnect()
+					end
+					
+					if ButtonConnection_temp then
+						ButtonConnection_temp:Disconnect() 
+					else
+						return
+					end
+
+					if x then
+						dir.Input.Text = dir.Input.Text:sub(1, #dir.Input.Text-1)
+					end
+					
+					Offers.Clear()
+
+					local stringLenght = #dir.Input.Text.." "
+					local stringSplit = string.split(dir.Input.Text.." ", " ")
+					local selectSplit = stringSplit[SplitIndex]
+					local result
+					
+					if SplitIndex > 1 then			
+						selectSplit = selectSplit or ''
+						
+						local SubLenght = #selectSplit
+						local SubLenght2 = #dir.Input.Text - SubLenght
+						result = string.sub(dir.Input.Text, 0, SubLenght2) .. Text
+
+						if #selectSplit > 0 or not byCast then
+							result = string.sub(dir.Input.Text, 0, SubLenght2) .. Text
+						else
+							result = string.sub(dir.Input.Text, 0, SubLenght2) .. ' ' .. Text
+						end
+					else
+						result = Text
+					end
+
+					if SplitIndex == 1 then
+						dir.Input.Text = "/"..result --.. ' '
+					else
+						dir.Input.Text =  result-- .. ' '
+					end
+					
+					delay(0, function()
+						dir.Input.CursorPosition = #dir.Input.Text + 1
+					end)
+				end
+				
+				local MyPIndex
+				
+				if Text:find('[', nil, true) and Text:find(']', nil, true) then
+					Button.TextColor3 = Color3.fromRGB(166, 166, 166)
+					Button.Interactable = false
+				else
+					Offers.CurrentOffersActive = true
+					table.insert(Offers.CurrentOffers, {Inst = Button, Callback = Callback})
+					ButtonConnection_temp = Button.MouseButton1Click:Once(Callback)
+					
+					MyPIndex = #Offers.CurrentOffers
+				end
+				
+				
+				con_t = Button.MouseEnter:Connect(function(x, y)
+					Offers.UpdateSelection(5, {ownIndex1 = MyPIndex})
+				end)
+			end
+			
+			Offers.Call = function(OffersT, SplitIndex)
+				for _, o in OffersT do
+					Offers.DoOffer(o, nil, SplitIndex)
+				end
+				
+				Offers.UpdateSelection(4)
+			end
+			
+			cons.RunService1 = game:GetService('RunService').RenderStepped:Connect(function(dT)
+				if dir.Input then
+					if dir.Input.Text:find('	', nil, true) then
+						dir.Input.Text = dir.Input.Text:gsub('	', '')
+					end
+				end
+			end)
+			
+			cons.UserInputService_InputBegin_02 = game:GetService('UserInputService').InputBegan:Connect(function(inp, busy)
+				if inp.KeyCode == Enum.KeyCode.LeftAlt then
+					upvs.IsAltHolding = true
+				end
+
+				if Offers.CurrentOffersActive and not upvs.IsAltHolding then
+					if inp.KeyCode == Enum.KeyCode.Up then
+						Offers.UpdateSelection(1)
+					elseif inp.KeyCode == Enum.KeyCode.Down then
+						Offers.UpdateSelection(2) 
+					elseif inp.KeyCode == Enum.KeyCode.Tab then
+						Offers.UpdateSelection(3)
+					end
+				elseif upvs.IsAltHolding and #buf:Get() > 0 then
+					local buffer_s = buf:Get()
+					local ind = upvs.BufferIndex or #buffer_s
+					
+					if upvs.BufferIndex == nil then
+						upvs.BufferIndex = ind
+					end
+					
+					if inp.KeyCode == Enum.KeyCode.Up then
+						upvs.BufferIndex = upvs.BufferIndex - 1
+						dir.Input.Text = buffer_s[ind]
+						dir.Input.CursorPosition = #dir.Input.Text + 1
+					elseif inp.KeyCode == Enum.KeyCode.Down then
+						upvs.BufferIndex = upvs.BufferIndex + 1
+						dir.Input.Text = buffer_s[ind]
+						dir.Input.CursorPosition = #dir.Input.Text + 1
+					end
+				end
+			end)
+			
+			cons.UserInputService_InputEnded_01 = game:GetService('UserInputService').InputEnded:Connect(function(inp, busy)
+				if inp.KeyCode == Enum.KeyCode.LeftAlt then
+					upvs.IsAltHolding = false
+				end
+			end)
+			
+			fncs.Offers = Offers;
+		end) --End [Offers]
+		
+		
+		task.spawn(function() --Start [Input]
+			cons.InputFocus_01 = dir.Input.Focused:Connect(function()
+				upvs.InputFocused_01 = true	
+			end)
+			
+			
+			local t_old = 0
+			local t_cp = -2
+			
+			cons.InputChanged_01 = dir.Input.Changed:Connect(function(Property)
+				if Property == 'CursorPosition' then
+					if t_cp == t_old then
+						return
+					else
+						t_old = t_cp
+						t_cp = dir.Input.CursorPosition
+
+						return
+					end
+				end
+
+				if Property ~= 'Text' then
+					return
+				end
+
+				local t = dir.Input.Text
+				upvs.InputContext_01 = t
+
+				fncs.Offers.Clear()
+
+				delay(0.03, function()
+					dir.Offers.Position = UDim2.new(0, dir.Input.TextBounds.X, 0, -3)
+				end)
+
+				local currentIndex = 0
+				currentIndex = #string.split(dir.Input.Text, " ")
+
+				local getting 
+				local command
+
+				local sub_split = string.split(string.sub(t, 2, -1), ' ')
+
+				if currentIndex == 1 then
+					getting = cmds.cmds
+				elseif currentIndex > 1 then
+					for name, values in cmds.cmds do
+						if string.lower(name) == string.lower(sub_split[currentIndex]) then
+							if values.Offers[currentIndex] then
+								getting = values.Offers[currentIndex]
+							end
+						end
+					end
+				end
+
+
+				if string.find(string.sub(t, 0, 1), '/') then
+					local ors = {}
+					if currentIndex == 1 then
+
+						for name, values in cmds.cmds do
+							if string.lower(name) ~= string.lower(sub_split[currentIndex]) then 
+								if string.find(string.lower(name), string.lower(sub_split[currentIndex])) and values.Hidden == nil then 
+									table.insert(ors, string.lower(name))
+								end 
+							else
+								ors = {}
+							end
+						end
+
+					elseif currentIndex > 1 then
+						for name, values in cmds.cmds do
+							if string.lower(name) == string.lower(sub_split[1]) then
+								if values.Offers then
+									if values.Offers[currentIndex - 1] then
+										for _, a in values.Offers[currentIndex - 1] do
+											if string.find(string.lower(a), string.lower(sub_split[currentIndex])) then
+												table.insert(ors, a)
+											end 
+										end
+
+										if table.find(ors, sub_split[currentIndex]) then
+											ors = {}
+										end
+									end
+								end
+							end
+						end
+					end
+
+					if #ors < 1 then fncs.Offers.Clear() else fncs.Offers.Call(ors, currentIndex) end
+				elseif string.find(string.sub(t, 0, 1), '.') then
+					local ors = {}
+					if currentIndex == 1 then
+
+						for name, values in cmds.tips do
+							if string.lower(name) ~= string.lower(sub_split[currentIndex]) then
+								if string.find(string.lower(name), string.lower(sub_split[currentIndex])) then
+									table.insert(ors, string.lower(name))
+								end 
+							else
+								ors = {}
+							end
+						end
+
+					elseif currentIndex > 1 then
+						for name, values in cmds.tips do
+							if string.lower(name) == string.lower(sub_split[1]) then
+								if values.Offers then
+									if values.Offers[currentIndex - 1] then
+										for _, a in values.Offers[currentIndex - 1] do
+											if string.find(string.lower(a), string.lower(sub_split[currentIndex])) then
+												table.insert(ors, a)
+											end 
+										end
+
+										if table.find(ors, sub_split[currentIndex]) then
+											ors = {}
+										end
+									end
+								end
+							end
+						end
+					end
+
+					if #ors < 1 then fncs.Offers.Clear() else fncs.Offers.Call(ors, currentIndex) end
+				end
+			end)
+			
+			cons.InputFocusLost_01 = dir.Input.FocusLost:Connect(function(IsPressed)
+				if IsPressed then
+					pcall(function()
+						local Saved = dir.Input.Text
+						
+						if dir.Input.Text == '' or dir.Input.Text == '/' then
+						elseif dir.Input.Text:sub(1, 1) == '/' then
+							local split_text = string.split(dir.Input.Text, " ")
+							local command = string.sub(split_text[1], 2, #split_text[1])
+							local args = split_text
+							table.remove(args, 1)
+
+							for name, values in cmds.cmds do
+								if string.lower(name) == string.lower(command) then
+									buf:Save(Saved) upvs.BufferIndex = nil
+									
+									local ExecInfo = {
+										Command = command;
+										Arguments = args;
+									}
+
+									values.Callback(game.Players.LocalPlayer, args, ExecInfo) break
+								end
+							end
+						elseif dir.Input.Text:sub(1, 1) == '.' then
+							local split_text = string.split(dir.Input.Text, " ")
+							local command = string.sub(split_text[1], 2, #split_text[1])
+							local args = split_text
+							table.remove(args, 1)
+
+							for name, values in cmds.tips do
+								if string.lower(name) == string.lower(command) then
+									buf:Save(Saved) upvs.BufferIndex = nil
+									
+									local ExecInfo = {
+										Command = command;
+										Arguments = args;
+									}
+									
+									values.Callback(game.Players.LocalPlayer, args, ExecInfo) break
+								end
+							end
+						end
+					end)
+
+					dir.Input.Text = ''
+					dir.Screen.Enabled = false
+				else
+					--input.CursorPosition = old
+				end
+			end)
+			
+			--> CustomAdded
+			module.Console = {};
+			module.Console.InputDisabled = true;
+
+			function module.Console: Open()
+				dir.Input.Text = '/'
+				dir.Input.CursorPosition = #dir.Input.Text + 1
+				dir.Input.Text = '/'
+				dir.Screen.Enabled = true
+				dir.Input.Text = '/'
+			end
+
+			function module.Console: Close()
+				dir.Input.Text = ''
+				dir.Screen.Enabled = false
+			end
+			
+			function module.Console: SetText(x)
+				dir.Input.Text = x
+			end
+			
+			function module.Console: AddText(x)
+				dir.Input.Text = dir.Input.Text .. x
+			end
+			
+			function module.Console: ClearText()
+				dir.Input.Text = ''
+			end
+			
+			function module.Console: SetSelection(x)
+				dir.Input.CursorPosition = x
+			end
+			--> CustomAdded
+			
+			--serv.GetSettings().binds.ConsoleOpen
+			
+			cons.UserInputService_InputBegin_01 = game:GetService('UserInputService').InputBegan:Connect(function(InputObject)
+				if module.Console.InputDisabled ~= true then
+					if InputObject.KeyCode == serv.GetSettings().binds.ConsoleOpen and dir.Screen.Enabled ~= true then
+						module.Console:Open()
+					elseif InputObject.KeyCode == serv.GetSettings().binds.ConsoleClose and dir.Screen.Enabled == true then
+						module.Console:Close()
+					end
+				end
+			end)
+		end) --End [Input]
+	end
+end
+
+
+
+return module
