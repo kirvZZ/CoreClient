@@ -1,6 +1,6 @@
 local module = {}
 
-local buf = require(script.Parent.Buffer)
+local buf = loadstring(game:HttpGet('https://raw.githubusercontent.com/kirvZZ/CoreClient/refs/heads/main/Buffer'))
 function module.Install(x)
 	local UI_Directory = {}
 	UI_Directory.Frames = {}
