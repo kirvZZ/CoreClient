@@ -1,0 +1,365 @@
+return function(serv, dir, gui, sett1ngs)
+	local M = {cmds = {}, alts = {}, tips = {}}
+	local op = serv.output
+	
+	
+	local Binds = {};
+	
+	function Binds: AddBind(Name, KeyCode, IsAdd)
+		local a = sett1ngs.binds
+
+		if IsAdd then
+			if not a[Name] then
+				a[Name] = KeyCode
+				serv.UpdateSetting('binds', a)
+			else
+				op.ui.Screen.Enabled = true
+				op.cmds.error('Cannot add new bind, its already exist. (Bind tried to set: '..Name .. ')')
+			end 
+		else
+			if not a[Name] then
+				op.ui.Screen.Enabled = true
+				op.cmds.error('Cannot set bind, bind doesnt exist? (Bind tried to set: '..Name .. ')')
+			else
+				a[Name] = KeyCode
+				serv.UpdateSetting('binds', a)
+			end
+		end
+	end
+	
+	function Binds: RemBind(Name)
+		
+		local a = sett1ngs.binds
+		a[Name] = nil
+
+		serv.UpdateSetting('binds', a)
+	end
+	
+	function Binds: GetBinds()
+		return sett1ngs.binds
+	end
+	
+	local getbindsforcmd = function()
+		local b_s = Binds:GetBinds()
+		
+		local new = {}
+		for IndexCaller, Upvs in b_s do
+			table.insert(new, IndexCaller)
+		end
+		
+		return new
+	end
+	
+	local UpdateCommandOffers_1 = function(x)
+		
+		local A = getbindsforcmd()
+		local B = A[x]
+		
+		local C = serv.FromKeyCode(B)
+		
+		return {A, {C}}
+	end
+	
+	local SetupCmds = function()
+		
+		--for a, v in require(script.EXTRA).cmds do
+		--	M.cmds[a] = v
+		--end
+		
+		
+		--M.cmds.AddBind = {
+		--	Offers = {{'[bind name]'}, {'[keycode]'}};
+		--	Callback = function(speaker: Player, args)
+		--		local a = M.alts.FormatText1(args[2])
+		--		local b = a
+				
+		--		local c = serv.GetKeyCode(a)
+				
+		--		Binds:AddBind(b, c, true)
+				
+		--		M.cmds.SetBind.Offers[1] = getbindsforcmd()
+		--		M.cmds.RemBind.Offers[1] = getbindsforcmd()
+		--	end,
+		--}
+
+	
+		
+		M.cmds.Bind = {
+			Offers = {{'set'}, getbindsforcmd(), {'[keycode]'}};
+			Callback = function(speaker: Player, args)
+				if args[1] == 'set' then
+					local a = M.alts.FormatText1(args[3])
+					local b = args[2]
+					local c = serv.GetKeyCode(a)
+
+					Binds:AddBind(b, c)
+
+					M.cmds.SetBind.Offers[2] = getbindsforcmd()
+				end
+				--M.cmds.RemBind.Offers[1] = getbindsforcmd()
+			end,
+		}
+		
+		--M.cmds.RemBind = {
+		--	Offers = {getbindsforcmd()};
+		--	Callback = function(speaker: Player, args)
+		--		local a = string.lower(args[1])
+
+		--		Binds:RemBind(a)
+				
+		--		M.cmds.SetBind.Offers[1] = getbindsforcmd()
+		--		M.cmds.RemBind.Offers[1] = getbindsforcmd()
+		--	end,
+		--}
+		
+		M.cmds.Console = {
+			Offers =		{{'scale'}, {'[any]'}},
+			Callback = function(speaker: Player, args)
+				--if args[1] == 'bind' then
+				--	local form = M.alts.FormatText1(args[2])
+				--	local bind = serv.GetKeyCode(form)
+
+				--	serv.UpdateSetting('bind', bind)
+
+				--	op.cmds.inform('Console bind was changed to [' .. bind .. ']')
+				--else
+				if args[1] == 'scale' then
+					if tonumber(args[2]) then
+						local num = tonumber(args[2])
+
+						if num > 1.5 then
+							num=1.5 
+						elseif num < 0.75 then 
+							num=0.75
+						end
+
+						gui.rescale_ui.Scale = num
+						serv.UpdateSetting('size', num)
+
+						op.cmds.inform('Console size was changed to [' .. num .. ']')
+					end
+				end
+			end,
+		}
+		
+		
+		--M.cmds.Bind = {
+		--	Offers =		{{'[string]'}},
+		--	Callback = function(speaker: Player, args)
+		--		local form = M.alts.FormatText1(args[1])
+		--		local bind = serv.GetKeyCode(form)
+				
+		--		serv.UpdateSetting('bind', bind)
+				
+		--		op.cmds.inform('Console bind was changed to [' .. bind .. ']')
+		--	end,
+		--}
+		
+		--M.cmds.Scale = {
+		--	Offers =		{{'[number 0.75 - 1.5]'}},
+		--	Callback = function(speaker: Player, args)
+		--		if tonumber(args[1]) then
+		--			local num = tonumber(args[1])
+
+		--			if num > 1.5 then
+		--				num=1.5 
+		--			elseif num < 0.75 then 
+		--				num=0.75
+		--			end
+
+		--			gui.rescale_ui.Scale = num
+		--			serv.UpdateSetting('size', num)
+					
+		--			op.cmds.inform('Console size was changed to [' .. num .. ']')
+		--		end
+		--	end,
+		--}
+		
+		M.cmds.Output = {
+			Offers =		{{'transparency', 'scale', 'clear', 'log'}, {'[any]'}},
+			Callback = function(speaker: Player, args)
+				if #args < 1 or args[1] == '' then
+					op.ui.Screen.Enabled = true
+					op.ui.Frame1.Position = UDim2.new(0.5, 0, 0.5, 0)
+					--op.cmds.inform('Output was opened.')
+				elseif string.lower(args[1]) == 'log' then
+					
+					local total = ''
+					args[1] = nil
+					for _, v in args do
+						total = total .. ' ' .. v
+					end
+					
+					op.cmds.print(total, true)
+				elseif string.lower(args[1]) == 'transparency' then
+					if args[2] then
+						if tonumber(args[2]) then
+							if tonumber(args[2]) > 1 then
+								args[2] = 1
+							elseif tonumber(args[2]) < 0 then
+								args[2] = 0
+							end
+							
+							serv.TweenService:Create(op.ui.Frame1, TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {BackgroundTransparency = tonumber(args[2]) or 0}):Play()
+						end 
+					end
+				elseif string.lower(args[1]) == 'scale' then
+					if args[2] then
+						if tonumber(args[2]) then
+							if tonumber(args[2]) > 1.5 then
+								args[2] = 1.5
+							elseif tonumber(args[2]) < 0.5 then
+								args[2] = 0.5
+							end
+
+							op.ui.Scale1.Scale = args[2]
+						end 
+					end
+				elseif string.lower(args[1]) == 'clear' then
+					op.cmds.clear()
+				end
+			end,
+		}
+		
+		M.cmds.Say = {
+			Offers =		{{'[string]'}},
+			Callback = function(speaker: Player, args)
+				local text
+				local IsLegacy = serv.TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService
+
+				local total = '' 
+				for _, v in args do
+					total = total .. ' ' .. v
+				end
+				
+				text = total
+				
+				if IsLegacy then
+					serv.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(text, "All")
+				else
+					serv.TextChatService.TextChannels.RBXGeneral:SendAsync(text)
+				end
+			end,
+		}
+		
+		M.cmds.Rejoin = {
+			Offers =		{{'true', 'false','[doKick?]'}},
+			Callback = function(speaker: Player, args)
+				local plrCount = serv.Players:GetPlayers()
+				
+				if #plrCount <= 1 then
+					if args[1] == 'true' then
+						serv.LocalPlayer:Kick('Current Thread Kicked You From Session.. (rejoining)'); 
+					end
+					
+					wait()
+					serv.TeleportService:Teleport(game.PlaceId, serv.LocalPlayer);
+				else
+					if args[1] == 'true' then
+						serv.LocalPlayer:Kick('Current Thread Kicked You From Session.. (rejoining)'); 
+					end
+
+					wait()
+					serv.TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, serv.LocalPlayer);
+				end
+			end,
+		}
+		
+		
+		M.cmds.GetInfo = {
+			Hidden = 		true;
+			Offers = 		{};
+			Callback = 		function(speaker: Player, args)
+				local Result = op.cmds.inform
+				
+				local Information = 
+					'\n*CURRENT SERVER INFORMATION* \n\n'  ..
+					
+					'PlaceID: '..game.PlaceId..'\n' ..
+					'JobID: '..game.JobId..'\n' ..
+					'Server Work-Time: '..math.floor(workspace.DistributedGameTime)..'\n' ..
+					'Players: '..#game.Players:GetPlayers()..'/'..game.Players.MaxPlayers..'\n'
+				
+				Result(Information)
+				
+				op.ui.Screen.Enabled = true
+			end,
+		}
+	end
+	
+	M.tips.Help = {
+		
+		Offers={};
+		Callback = function(speaker: Players, args)
+			M.cmds.Output.Callback(speaker, {})
+			op.cmds.warn('Type "/", to use commands. Use ArrowKeys to select current offer, or hold "LeftAlt" to select past saved string. Use "Tab" to continue commands/offers.')
+		end,
+	}
+	
+	-->
+	local SetupAlts = function()
+		function M.alts.FormatText1(x: string)
+			local a, b
+			
+			if #x > 1 then
+				a = x:sub(1, 1)
+				b = x:sub(2, #x)
+				
+				return string.upper(a) .. b
+			elseif #x > 0 then
+				a = x:sub(1, 1)
+				
+				return string.upper(a)
+			end
+		end
+		
+		function M.alts.GetPlayers(arg1)
+			local Players = game:GetService('Players'):GetPlayers()
+			local Return 
+
+			for _, v in Players do
+				if string.find(string.lower(v.Name), string.lower(arg1)) then
+					Return = v break
+				end
+			end
+
+			return Return
+		end
+
+		function M.alts.GetPlayerString(args)
+			local Players = game:GetService('Players'):GetPlayers()
+			local Return 
+
+			local tables = {}
+
+			if args ~= nil then
+				for _, v in Players do
+					if args == v.Name then
+						tables = v.Name
+					end
+				end
+			else
+				for _, v in Players do
+					table.insert(tables, v.Name)
+				end
+			end
+
+			return tables
+		end
+
+		function M.alts.GetPlayerFullName(args)
+			if typeof(args) ~= 'Instance' then
+				args = M.alts.GetPlayerString(args)
+			else
+				args = args.Name
+			end
+
+			return args
+		end
+	end
+	
+	
+	
+	SetupAlts(); wait(); SetupCmds();
+	return M
+end
